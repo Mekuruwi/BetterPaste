@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Configurable paste rules utility - like Excel Paste Special for your entire system",
   "main": "src/main/main.js",
+  "author": "Mekuruwi",
   "repository": {
     "type": "git",
     "url": "https://github.com/Mekuruwi/BetterPaste.git"
