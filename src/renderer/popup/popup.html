@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self';">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BetterPaste</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="popup-container">
+    <!-- Header / Brand & Search -->
+    <header id="header">
+      <div id="brand-row">
+        <div class="brand">
+          <span class="brand-icon">📋</span>
+          <span class="brand-name">BetterPaste</span>
+          <span class="brand-badge">PowerSpecial</span>
+        </div>
+        <button id="settings-btn" title="Abrir Configurações" aria-label="Configurações">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div id="search-bar">
+        <svg id="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input id="search-input" type="text" placeholder="Buscar regra ou digitar 1-9..." autofocus spellcheck="false" autocomplete="off" />
+        <span id="search-count" class="search-count">0 regras</span>
+      </div>
+    </header>
+
+    <!-- Rules List -->
+    <div id="rules-list" tabIndex="-1"></div>
+
+    <!-- Preview Panel -->
+    <div id="preview-panel">
+      <div id="preview-header">
+        <span id="preview-title">Pré-visualização Ao Vivo</span>
+        <span id="preview-rule-name" class="preview-rule-badge">Nenhuma regra selecionada</span>
+      </div>
+      <div id="preview-content">
+        <div id="preview-before" class="preview-box">
+          <div class="preview-tag tag-before">Original</div>
+          <pre id="preview-before-text">...</pre>
+        </div>
+        <div id="preview-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </div>
+        <div id="preview-after" class="preview-box">
+          <div class="preview-tag tag-after">Resultado</div>
+          <pre id="preview-after-text">...</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <footer id="status-bar">
+      <div class="status-left">
+        <span id="hotkey-indicator" class="kbd-pill">Ctrl+Shift+V</span>
+        <span class="status-tip">para abrir</span>
+      </div>
+      <div class="status-right">
+        <span class="status-key"><kbd>↑</kbd><kbd>↓</kbd> navegar</span>
+        <span class="status-key"><kbd>Enter</kbd> colar</span>
+        <span class="status-key"><kbd>Esc</kbd> fechar</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6C5CE7"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect x="4" y="4" width="120" height="120" rx="24" ry="24" fill="url(#bg)"/>
+  <!-- Clipboard body -->
+  <rect x="30" y="30" width="52" height="68" rx="6" ry="6" fill="white" opacity="0.95"/>
+  <!-- Clipboard clip -->
+  <rect x="43" y="24" width="26" height="14" rx="4" ry="4" fill="white" opacity="0.95"/>
+  <rect x="49" y="20" width="14" height="10" rx="5" ry="5" fill="#6C5CE7"/>
+  <!-- Text lines -->
+  <rect x="38" y="46" width="36" height="4" rx="2" fill="#6C5CE7" opacity="0.5"/>
+  <rect x="38" y="55" width="28" height="4" rx="2" fill="#6C5CE7" opacity="0.4"/>
+  <rect x="38" y="64" width="32" height="4" rx="2" fill="#6C5CE7" opacity="0.3"/>
+  <rect x="38" y="73" width="20" height="4" rx="2" fill="#6C5CE7" opacity="0.2"/>
+  <!-- Gear icon overlay -->
+  <circle cx="88" cy="88" r="24" fill="#fdcb6e"/>
+  <circle cx="88" cy="88" r="10" fill="#6C5CE7"/>
+  <!-- Gear teeth -->
+  <rect x="84" y="62" width="8" height="12" rx="2" fill="#fdcb6e"/>
+  <rect x="84" y="102" width="8" height="12" rx="2" fill="#fdcb6e"/>
+  <rect x="62" y="84" width="12" height="8" rx="2" fill="#fdcb6e"/>
+  <rect x="102" y="84" width="12" height="8" rx="2" fill="#fdcb6e"/>
+  <!-- Diagonal teeth -->
+  <rect x="68" y="68" width="10" height="8" rx="2" fill="#fdcb6e" transform="rotate(-45 73 72)"/>
+  <rect x="98" y="98" width="10" height="8" rx="2" fill="#fdcb6e" transform="rotate(-45 103 102)"/>
+  <rect x="98" y="68" width="10" height="8" rx="2" fill="#fdcb6e" transform="rotate(45 103 72)"/>
+  <rect x="68" y="98" width="10" height="8" rx="2" fill="#fdcb6e" transform="rotate(45 73 102)"/>
+</svg>

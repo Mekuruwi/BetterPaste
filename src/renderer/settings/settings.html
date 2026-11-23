@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self';">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BetterPaste - Configurações</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar Navigation -->
+    <nav id="sidebar">
+      <div id="sidebar-header">
+        <div class="sidebar-brand">
+          <span class="app-logo">📋</span>
+          <div class="app-brand-info">
+            <span class="app-name">BetterPaste</span>
+            <span class="app-tag">PowerSpecial v1.0</span>
+          </div>
+        </div>
+      </div>
+
+      <ul id="nav-list">
+        <li class="nav-item active" data-tab="rules">
+          <span class="nav-icon">📝</span>
+          <span class="nav-label">Regras Integradas</span>
+        </li>
+        <li class="nav-item" data-tab="custom">
+          <span class="nav-icon">🛠</span>
+          <span class="nav-label">Regras Customizadas</span>
+          <span id="custom-rules-count-badge" class="nav-badge">0</span>
+        </li>
+        <li class="nav-item" data-tab="shortcuts">
+          <span class="nav-icon">⌨</span>
+          <span class="nav-label">Atalhos Globais</span>
+        </li>
+        <li class="nav-item" data-tab="general">
+          <span class="nav-icon">⚙</span>
+          <span class="nav-label">Geral</span>
+        </li>
+        <li class="nav-item" data-tab="about">
+          <span class="nav-icon">ℹ</span>
+          <span class="nav-label">Sobre</span>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="tray-status-card">
+          <span class="status-dot online"></span>
+          <div class="tray-status-text">
+            <span class="tray-status-title">System Tray Ativo</span>
+            <span id="sidebar-current-hotkey" class="tray-status-sub">Ctrl+Shift+V</span>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="content">
+
+      <!-- === Tab: Regras Integradas === -->
+      <section id="tab-rules" class="tab-panel active">
+        <div class="tab-header">
+          <div>
+            <h1>Regras Integradas</h1>
+            <p class="tab-desc">Ative ou desative regras de transformação. Arraste os cards para reordenar a prioridade.</p>
+          </div>
+        </div>
+
+        <div id="rules-filter-bar">
+          <div class="search-input-wrapper">
+            <span class="input-icon">🔍</span>
+            <input id="rules-search" type="text" placeholder="Filtrar por nome ou descrição..." spellcheck="false" />
+          </div>
+          <select id="rules-category-filter">
+            <option value="">Todas categorias</option>
+            <option value="formatting">Formatação</option>
+            <option value="whitespace">Espaços</option>
+            <option value="case">Caixa de Texto</option>
+            <option value="replace">Substituição</option>
+            <option value="numbers">Números</option>
+            <option value="lines">Linhas</option>
+            <option value="encoding">Codificação</option>
+            <option value="advanced">Avançado</option>
+          </select>
+        </div>
+
+        <div id="builtin-rules-list"></div>
+
+        <!-- Options modal/panel for configurable rules -->
+        <div id="rule-options-panel" class="hidden">
+          <div class="panel-card">
+            <h3 id="rule-options-title">Opções da Regra</h3>
+            <div id="rule-options-form"></div>
+            <div class="options-actions">
+              <button id="rule-options-save" class="btn btn-primary">Salvar Parâmetros</button>
+              <button id="rule-options-cancel" class="btn btn-secondary">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- === Tab: Custom Rules === -->
+      <section id="tab-custom" class="tab-panel">
+        <div class="tab-header">
+          <div>
+            <h1>Regras Customizadas</h1>
+            <p class="tab-desc">Crie novas regras usando scripts em <strong>JavaScript</strong>, <strong>Python</strong> ou <strong>VBScript</strong>.</p>
+          </div>
+          <button id="add-custom-rule-btn" class="btn btn-primary">+ Nova Regra</button>
+        </div>
+
+        <div id="custom-rules-list"></div>
+
+        <!-- Custom Rule Editor -->
+        <div id="custom-rule-editor" class="hidden">
+          <div class="editor-header">
+            <h3 id="editor-title">Nova Regra Customizada</h3>
+            <span class="editor-subtitle">Escreva seu script ou aponte para um arquivo no disco</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="custom-rule-name">Nome da Regra</label>
+              <input id="custom-rule-name" type="text" placeholder="Ex: Formatar CPF / CNPJ" />
+            </div>
+
+            <div class="form-group">
+              <label for="custom-rule-desc">Descrição</label>
+              <input id="custom-rule-desc" type="text" placeholder="Breve resumo da transformação" />
+            </div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="custom-rule-lang">Linguagem</label>
+              <select id="custom-rule-lang">
+                <option value="js">JavaScript (Node.js)</option>
+                <option value="python">Python</option>
+                <option value="vbs">VBScript</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="custom-rule-source-type">Origem do Código</label>
+              <select id="custom-rule-source-type">
+                <option value="inline">Código Inline (escrever diretamente)</option>
+                <option value="file">Arquivo de Script (.js, .py, .vbs)</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="inline-code-group" class="form-group">
+            <div class="code-label-row">
+              <label for="custom-rule-code">Código do Script</label>
+              <button id="insert-template-btn" type="button" class="btn-text">Carregar Exemplo da Linguagem</button>
+            </div>
+            <textarea id="custom-rule-code" rows="7" placeholder="// Em JS: a variável 'text' contém o conteúdo da área de transferência.&#10;return text.toUpperCase();" spellcheck="false"></textarea>
+            <small id="code-hint" class="form-hint">JS: retorne o texto transformado. Python/VBScript: lê da entrada padrão (stdin) e escreve na saída padrão (stdout).</small>
+          </div>
+
+          <div id="file-path-group" class="form-group hidden">
+            <label for="custom-rule-path">Caminho do Arquivo de Script</label>
+            <div class="file-input-row">
+              <input id="custom-rule-path" type="text" placeholder="C:\scripts\minha-regra.py" readonly />
+              <button id="browse-script-btn" class="btn btn-secondary">Procurar...</button>
+            </div>
+          </div>
+
+          <!-- Live test panel -->
+          <div class="test-panel">
+            <div class="test-panel-header">
+              <span class="test-title">Testar em Tempo Real</span>
+              <button id="custom-test-btn" class="btn btn-secondary btn-sm">▶ Executar Teste</button>
+            </div>
+            <div class="test-row">
+              <div class="test-col">
+                <label>Entrada (Texto)</label>
+                <textarea id="custom-test-input" placeholder="Cole o texto de teste aqui..." rows="2"></textarea>
+              </div>
+              <div class="test-col">
+                <label>Saída (Resultado)</label>
+                <pre id="custom-test-output">(clique em Executar Teste)</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="editor-actions">
+            <button id="custom-save-btn" class="btn btn-primary">Salvar Regra</button>
+            <button id="custom-cancel-btn" class="btn btn-secondary">Cancelar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- === Tab: Shortcuts === -->
+      <section id="tab-shortcuts" class="tab-panel">
+        <div class="tab-header">
+          <div>
+            <h1>Atalhos Globais</h1>
+            <p class="tab-desc">Configure o atalho global que abre o BetterPaste em qualquer aplicativo do Windows.</p>
+          </div>
+        </div>
+
+        <!-- Hotkey Card -->
+        <div class="card hotkey-config-card">
+          <div class="card-header">
+            <h3>Atalho de Abertura Global</h3>
+            <span class="badge badge-accent">Global Hook</span>
+          </div>
+
+          <div class="hotkey-display-area">
+            <div class="current-hotkey-box">
+              <span class="box-label">Atalho Ativo no Momento</span>
+              <div id="active-hotkey-display" class="hotkey-tags">
+                <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd>
+              </div>
+            </div>
+          </div>
+
+          <div class="hotkey-recorder-wrapper">
+            <label>Gravar Novo Atalho</label>
+            <div class="recorder-bar">
+              <div id="recorder-display" class="recorder-box" tabindex="0">
+                <span id="recorder-prompt">Clique aqui e pressione as teclas desejadas...</span>
+              </div>
+              <button id="save-hotkey-btn" class="btn btn-primary" disabled>Salvar Atalho</button>
+              <button id="reset-hotkey-btn" class="btn btn-secondary">Padrão (Ctrl+Shift+V)</button>
+            </div>
+            <div id="hotkey-feedback" class="feedback-msg hidden"></div>
+          </div>
+
+          <p class="card-footer-tip">
+            💡 Dica: Combinações recomendadas: <code>Ctrl + Shift + V</code>, <code>Ctrl + Alt + V</code>, <code>Alt + V</code> ou <code>F9</code>.
+          </p>
+        </div>
+
+        <!-- Internal popup shortcuts table -->
+        <div class="card">
+          <div class="card-header">
+            <h3>Teclas de Navegação Dentro do Popup</h3>
+          </div>
+          <div class="shortcut-table">
+            <div class="shortcut-row">
+              <span class="shortcut-action">Navegar entre regras na lista</span>
+              <span class="shortcut-keys"><kbd>↑</kbd> <kbd>↓</kbd></span>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-action">Aplicar regra e colar direto</span>
+              <span class="shortcut-keys"><kbd>Enter</kbd></span>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-action">Acesso direto da 1ª à 9ª regra</span>
+              <span class="shortcut-keys"><kbd>1</kbd> até <kbd>9</kbd></span>
+            </div>
+            <div class="shortcut-row">
+              <span class="shortcut-action">Fechar popup</span>
+              <span class="shortcut-keys"><kbd>Esc</kbd></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- === Tab: Geral === -->
+      <section id="tab-general" class="tab-panel">
+        <div class="tab-header">
+          <div>
+            <h1>Configurações Gerais</h1>
+            <p class="tab-desc">Ajuste o comportamento do aplicativo no sistema.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="setting-item">
+            <div class="setting-info">
+              <span class="setting-title">Fechar Popup Automaticamente</span>
+              <span class="setting-desc">Fecha o popup instantaneamente se você clicar fora dele ou trocar de janela</span>
+            </div>
+            <label class="switch">
+              <input id="setting-auto-close" type="checkbox" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- === Tab: About === -->
+      <section id="tab-about" class="tab-panel">
+        <div class="tab-header">
+          <div>
+            <h1>Sobre o BetterPaste</h1>
+            <p class="tab-desc">Informações do utilitário e tecnologias.</p>
+          </div>
+        </div>
+
+        <div class="card about-hero">
+          <div class="about-icon">📋✨</div>
+          <h2>BetterPaste</h2>
+          <span class="badge badge-accent">Versão 1.0.0 — PowerSpecial</span>
+          <p class="about-desc">
+            Utilitário de produtividade de colagem inteligente para Windows.
+            Inspirado no <em>Colar Especial</em> do Microsoft Excel e no estilo de utilitários rápidos como <em>PowerToys Run</em> e <em>Funil Comercial</em>.
+          </p>
+
+          <div class="about-features-grid">
+            <div class="about-feat">
+              <span class="feat-icon">⚡</span>
+              <strong>Colagem Direta</strong>
+              <small>Restaura o foco e cola instantaneamente no app alvo via Windows API</small>
+            </div>
+            <div class="about-feat">
+              <span class="feat-icon">🛠</span>
+              <strong>Scripting Multi-Linguagem</strong>
+              <small>Suporte nativo a JavaScript, Python e VBScript</small>
+            </div>
+            <div class="about-feat">
+              <span class="feat-icon">⌨</span>
+              <strong>Atalhos Flexíveis</strong>
+              <small>Hotkeys customizáveis integradas ao System Tray</small>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
