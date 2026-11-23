@@ -39,4 +39,17 @@ contextBridge.exposeInMainWorld('betterPaste', {
 
   /** Update and test global hotkey */
   updateHotkey: (hotkey, displayLabel) => ipcRenderer.invoke('hotkey:update', hotkey, displayLabel),
+
+  /** Window controls */
+  minimizeWindow: () => ipcRenderer.send('window:minimize'),
+  closeWindow: () => ipcRenderer.send('window:close'),
+
+  /** Application updates */
+  getAppVersion: () => ipcRenderer.invoke('app:get-version'),
+  checkForUpdates: () => ipcRenderer.invoke('updates:check'),
+  downloadUpdate: () => ipcRenderer.invoke('updates:download'),
+  installUpdate: () => ipcRenderer.invoke('updates:install'),
+  onUpdateStatus: (callback) => {
+    ipcRenderer.on('updates:status', (_event, status) => callback(status));
+  },
 });

@@ -3,14 +3,22 @@
   "version": "1.0.0",
   "description": "Configurable paste rules utility - like Excel Paste Special for your entire system",
   "main": "src/main/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mekuruwi/BetterPaste.git"
+  },
   "scripts": {
     "start": "electron .",
     "build": "electron-builder",
+    "release": "electron-builder --publish always",
     "dev": "electron . --dev"
   },
   "devDependencies": {
     "electron": "^28.0.0",
     "electron-builder": "^24.9.0"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9"
   },
   "build": {
     "appId": "com.betterpaste.app",
@@ -25,6 +33,13 @@
     ],
     "directories": {
       "output": "dist"
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Mekuruwi",
+        "repo": "BetterPaste"
+      }
+    ]
   }
 }

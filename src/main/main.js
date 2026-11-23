@@ -12,6 +12,7 @@ const {
   shell,
 } = require('electron');
 const path = require('path');
+const { autoUpdater } = require('electron-updater');
 
 const { createTray, destroyTray, getIsActive, updateTrayHotkey } = require('./tray');
 const {
@@ -47,6 +48,25 @@ let rules = [];
 let appSettings = {};
 let lastForegroundHwnd = '0';
 const APP_ICON = path.join(__dirname, '..', '..', 'assets', 'icon.png');
+
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = true;
+
+function sendUpdateStatus(status) {
+  if (settingsWindow && !settingsWindow.isDestroyed()) {
+    settingsWindow.webContents.send('updates:status', status);
+  }
+}
+
+autoUpdater.on('checking-for-update', () => sendUpdateStatus({ type: 'checking' }));
+autoUpdater.on('update-available', (info) => sendUpdateStatus({ type: 'available', version: info.version }));
+autoUpdater.on('update-not-available', (info) => sendUpdateStatus({ type: 'current', version: info.version }));
+autoUpdater.on('download-progress', (progress) => sendUpdateStatus({
+  type: 'progress',
+  percent: Math.round(progress.percent),
+}));
+autoUpdater.on('update-downloaded', (info) => sendUpdateStatus({ type: 'downloaded', version: info.version }));
+autoUpdater.on('error', (error) => sendUpdateStatus({ type: 'error', message: error.message }));
 
 // ---------------------------------------------------------------------------
 // Popup window (Floating PowerToys style)
@@ -129,7 +149,7 @@ function createSettingsWindow() {
     height: 680,
     minWidth: 760,
     minHeight: 520,
-    frame: true,
+    frame: false,
     show: false,
     title: 'BetterPaste - Configurações',
     icon: APP_ICON,
@@ -229,6 +249,41 @@ function setupIPC() {
   ipcMain.on('settings:open', () => {
     closePopup();
     createSettingsWindow();
+  });
+
+  ipcMain.on('window:minimize', (event) => {
+    BrowserWindow.fromWebContents(event.sender)?.minimize();
+  });
+
+  ipcMain.on('window:close', (event) => {
+    BrowserWindow.fromWebContents(event.sender)?.close();
+  });
+
+  ipcMain.handle('app:get-version', () => app.getVersion());
+
+  ipcMain.handle('updates:check', async () => {
+    if (!app.isPackaged) {
+      return { type: 'error', message: 'As atualizações ficam disponíveis apenas na versão instalada.' };
+    }
+    try {
+      const result = await autoUpdater.checkForUpdates();
+      return { type: 'checking', version: result?.updateInfo?.version };
+    } catch (error) {
+      return { type: 'error', message: error.message };
+    }
+  });
+
+  ipcMain.handle('updates:download', async () => {
+    try {
+      await autoUpdater.downloadUpdate();
+      return { type: 'progress', percent: 0 };
+    } catch (error) {
+      return { type: 'error', message: error.message };
+    }
+  });
+
+  ipcMain.handle('updates:install', () => {
+    autoUpdater.quitAndInstall();
   });
 
   // ---- Settings IPC ----
@@ -341,6 +396,10 @@ app.whenReady().then(() => {
 
   // Register configured global hotkey
   registerGlobalHotkey();
+
+  if (appSettings.autoCheckUpdates !== false && app.isPackaged) {
+    setTimeout(() => autoUpdater.checkForUpdates().catch(() => {}), 5000);
+  }
 
   // Setup IPC handlers
   setupIPC();

@@ -37,6 +37,10 @@ async function init() {
     allRules = await window.betterPaste.getRules();
     allRules = allRules.filter((r) => r.enabled);
     filteredRules = [...allRules];
+    const appSettings = await window.betterPaste.getAppSettings();
+    if (appSettings.accentColor) {
+      document.documentElement.style.setProperty('--accent-color', appSettings.accentColor);
+    }
 
     // Load active hotkey for the status bar
     try {
@@ -232,6 +236,10 @@ document.getElementById('search-input').addEventListener('input', (e) => {
 
 document.getElementById('settings-btn').addEventListener('click', () => {
   window.betterPaste.openSettings();
+});
+
+document.getElementById('close-btn')?.addEventListener('click', () => {
+  window.betterPaste.closePopup();
 });
 
 document.addEventListener('keydown', (e) => {

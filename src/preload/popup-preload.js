@@ -25,6 +25,9 @@ contextBridge.exposeInMainWorld('betterPaste', {
   /** Get display string of current hotkey */
   getHotkeyDisplay: () => ipcRenderer.invoke('hotkey:get-display'),
 
+  /** Get personalized app settings */
+  getAppSettings: () => ipcRenderer.invoke('settings:get-app'),
+
   /** Listen for clipboard updates (future use) */
   onClipboardUpdate: (callback) => {
     ipcRenderer.on('clipboard:updated', (_event, text) => callback(text));

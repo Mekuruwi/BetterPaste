@@ -371,6 +371,8 @@ function getDefaultSettings() {
     displayHotkey: 'Ctrl+Shift+V',
     theme: 'dark',
     autoClose: true,
+    accentColor: '#6366f1',
+    autoCheckUpdates: true,
   };
 }
 

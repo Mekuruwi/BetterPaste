@@ -586,6 +586,64 @@ function renderGeneralSettings() {
       await window.betterPaste.saveAppSettings(appSettings);
     });
   }
+
+  const accentInput = document.getElementById('setting-accent-color');
+  if (accentInput) {
+    accentInput.value = appSettings.accentColor || '#6366f1';
+    accentInput.addEventListener('change', async (e) => {
+      appSettings.accentColor = e.target.value;
+      await window.betterPaste.saveAppSettings(appSettings);
+    });
+  }
+
+  const autoUpdatesCheck = document.getElementById('setting-auto-updates');
+  if (autoUpdatesCheck) {
+    autoUpdatesCheck.checked = appSettings.autoCheckUpdates !== false;
+    autoUpdatesCheck.addEventListener('change', async (e) => {
+      appSettings.autoCheckUpdates = e.target.checked;
+      await window.betterPaste.saveAppSettings(appSettings);
+    });
+  }
+
+  setupUpdateControls();
+}
+
+async function setupUpdateControls() {
+  const statusEl = document.getElementById('update-status');
+  const versionEl = document.getElementById('app-version');
+  const checkBtn = document.getElementById('check-update-btn');
+  const downloadBtn = document.getElementById('download-update-btn');
+  const installBtn = document.getElementById('install-update-btn');
+
+  if (versionEl) {
+    versionEl.textContent = await window.betterPaste.getAppVersion();
+  }
+
+  checkBtn?.addEventListener('click', async () => {
+    statusEl.textContent = 'Verificando novas versões...';
+    const result = await window.betterPaste.checkForUpdates();
+    if (result.type === 'error') statusEl.textContent = result.message;
+  });
+
+  downloadBtn?.addEventListener('click', () => window.betterPaste.downloadUpdate());
+  installBtn?.addEventListener('click', () => window.betterPaste.installUpdate());
+
+  window.betterPaste.onUpdateStatus((status) => {
+    downloadBtn?.classList.add('hidden');
+    installBtn?.classList.add('hidden');
+    if (status.type === 'checking') statusEl.textContent = 'Verificando novas versões...';
+    if (status.type === 'available') {
+      statusEl.textContent = `Nova versão disponível: ${status.version}`;
+      downloadBtn?.classList.remove('hidden');
+    }
+    if (status.type === 'current') statusEl.textContent = `Você está usando a versão mais recente (${status.version}).`;
+    if (status.type === 'progress') statusEl.textContent = `Baixando atualização... ${status.percent}%`;
+    if (status.type === 'downloaded') {
+      statusEl.textContent = `Versão ${status.version} pronta para instalar.`;
+      installBtn?.classList.remove('hidden');
+    }
+    if (status.type === 'error') statusEl.textContent = status.message || 'Não foi possível verificar atualizações.';
+  });
 }
 
 // ============================================================================
@@ -599,3 +657,11 @@ function escapeHtml(text) {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+document.getElementById('minimize-window')?.addEventListener('click', () => {
+  window.betterPaste.minimizeWindow();
+});
+
+document.getElementById('close-window')?.addEventListener('click', () => {
+  window.betterPaste.closeWindow();
+});

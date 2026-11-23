@@ -67,6 +67,7 @@ body {
   background: linear-gradient(180deg, #171936 0%, rgba(23, 25, 54, 0.8) 100%);
   border-bottom: 1px solid var(--border-color);
   padding: 12px 14px 10px;
+  -webkit-app-region: drag;
 }
 
 #brand-row {
@@ -74,6 +75,33 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 10px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  -webkit-app-region: no-drag;
+}
+
+#close-btn {
+  width: 27px;
+  height: 27px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#close-btn:hover {
+  color: #fff;
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.35);
 }
 
 .brand {
@@ -135,6 +163,7 @@ body {
   border-radius: 8px;
   padding: 7px 11px;
   transition: all 0.2s;
+  -webkit-app-region: no-drag;
 }
 
 #search-bar:focus-within {
